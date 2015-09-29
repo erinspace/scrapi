@@ -1,7 +1,7 @@
 """
 Harvester of PubMed Central for the SHARE notification service
 
-Example API call: http://www.pubmedcentral.nih.gov/oai/oai.cgi?verb=ListRecords&metadataPrefix=oai_dc&from=2015-04-13&until=2015-04-14
+Example API call: http://www.ncbi.nlm.nih.gov/pmc/oai/oai.cgi?verb=ListRecords&metadataPrefix=oai_dc&from=2015-04-13&until=2015-04-14
 """
 
 
@@ -15,12 +15,9 @@ def format_uris_pubmedcentral(*args):
     uris = helpers.oai_process_uris(*args)
 
     for arg in args:
-        try:
-            if 'oai:pubmedcentral.nih.gov:' in arg[0]:
-                PMC_ID = arg[0].replace('oai:pubmedcentral.nih.gov:', '')
-                uris['canonicalUri'] = 'http://www.ncbi.nlm.nih.gov/pmc/articles/PMC' + PMC_ID
-        except IndexError:
-            pass
+        if arg and 'oai:pubmedcentral.nih.gov:' in arg[0]:
+            PMC_ID = arg[0].replace('oai:pubmedcentral.nih.gov:', '')
+            uris['canonicalUri'] = 'http://www.ncbi.nlm.nih.gov/pmc/articles/PMC' + PMC_ID
 
     return uris
 
@@ -36,7 +33,7 @@ class PubMedCentralHarvester(OAIHarvester):
             "uris": ('//ns0:header/ns0:identifier/node()', '//dc:identifier/node()', format_uris_pubmedcentral)
         })
 
-    base_url = 'http://www.pubmedcentral.nih.gov/oai/oai.cgi'
+    base_url = 'http://www.ncbi.nlm.nih.gov/pmc/oai/oai.cgi'
     property_list = [
         'type', 'source', 'rights',
         'format', 'setSpec', 'date', 'identifier'
